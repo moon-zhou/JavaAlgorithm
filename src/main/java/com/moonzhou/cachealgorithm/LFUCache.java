@@ -3,7 +3,7 @@ package com.moonzhou.cachealgorithm;
 import java.util.*;
 
 /**
- * @Description
+ * @Description 最近最不常用，当缓存容量满时，移除访问次数最少的元素，如果访问次数相同的元素有多个，则移除最久访问的那个。
  * @Author moon-zhou <ayimin1989@163.com>
  * @Version V1.0.0
  * @Since 1.0
