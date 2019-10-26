@@ -14,7 +14,9 @@ public class Test {
     public static void main(String[] args) {
 //        testFIFO();
 
-        testLRU();
+//        testLRU();
+
+        testLFU();
     }
 
     private static void testFIFO() {
@@ -34,18 +36,37 @@ public class Test {
 
     private static void testLRU() {
 
-        ICache fifo = new LRUCache(2);
-        fifo.put("moon1", "zhou1", 300);
+        ICache lru = new LRUCache(2);
+        lru.put("moon1", "zhou1", 300);
 
-        System.out.println(JSON.toJSONString(fifo.get()));
+        System.out.println(JSON.toJSONString(lru.get()));
 
-        fifo.put("moon2", "zhou2", 300);
-        System.out.println(JSON.toJSONString(fifo.get()));
+        lru.put("moon2", "zhou2", 300);
+        System.out.println(JSON.toJSONString(lru.get()));
 
-        fifo.get("moon1");
+        lru.get("moon1");
 
         // 超出设置的容量，删除moon1
-        fifo.put("moon3", "zhou3", 300);
-        System.out.println(JSON.toJSONString(fifo.get()));
+        lru.put("moon3", "zhou3", 300);
+        System.out.println(JSON.toJSONString(lru.get()));
+    }
+
+    private static void testLFU() {
+        ICache lfu = new LFUCache(2);
+        lfu.put("moon1", "zhou1", 300);
+
+        System.out.println(JSON.toJSONString(lfu.get()));
+
+        lfu.put("moon2", "zhou2", 300);
+        System.out.println(JSON.toJSONString(lfu.get()));
+
+        lfu.get("moon1");
+
+        // 超出设置的容量，删除moon1
+        lfu.put("moon3", "zhou3", 300);
+        System.out.println(JSON.toJSONString(lfu.get()));
+
+        lfu.remove("moon3");
+        System.out.println(JSON.toJSONString(lfu.get()));
     }
 }
