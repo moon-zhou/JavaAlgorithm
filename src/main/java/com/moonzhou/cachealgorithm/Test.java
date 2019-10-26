@@ -14,9 +14,9 @@ public class Test {
     public static void main(String[] args) {
 //        testFIFO();
 
-//        testLRU();
+        testLRU();
 
-        testLFU();
+//        testLFU();
     }
 
     private static void testFIFO() {

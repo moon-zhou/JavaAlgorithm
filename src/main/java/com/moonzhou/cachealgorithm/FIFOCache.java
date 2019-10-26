@@ -27,39 +27,10 @@ import java.util.concurrent.TimeUnit;
  * @Since 1.0
  * @Date 2019/10/20
  */
-public class FIFOCache implements ICache {
-
-    /**
-     * 按照访问时间排序,保存所有key-value
-     */
-    private final Map<String, Value> CACHE = new LinkedHashMap<>();
-
-    /**
-     * 过期数据，只保存有过期时间的key
-     * 暂不考虑并发，我们认为同一个时间内没有重复的key，如果改造的话，可以将value换成set
-     *
-     * 存储的key为过期时间（Long），value为CACHE的key值
-     * TreeMap为有序的，默认key升序，所以如果遇到一个没有过期的，那么之后的都没有过期
-     */
-    private final TreeMap<Long, String> EXPIRED = new TreeMap<>();
-
-    /**
-     * 缓存大小
-     */
-    private final int capacity;
+public class FIFOCache extends AbstractExpireCache {
 
     public FIFOCache(int capacity) {
-        this.capacity = capacity;
-    }
-
-    /**
-     * 获取全量缓存值
-     * 用于测试
-     * @return
-     */
-    @Override
-    public Map<String, Value> get() {
-        return CACHE;
+        super(capacity);
     }
 
     /**
@@ -88,15 +59,6 @@ public class FIFOCache implements ICache {
         }
 
         return value.value;
-    }
-
-    /**
-     * 无过期时间的设置值
-     * @param key
-     * @param value
-     */
-    public void put(String key, Object value) {
-        put(key, value, -1);
     }
 
     /**
@@ -155,45 +117,4 @@ public class FIFOCache implements ICache {
         }
 
     }
-
-    private long expiredTime(int expired) {
-        return System.nanoTime() + TimeUnit.SECONDS.toNanos(expired);
-    }
-
-    /**
-     * 当前缓存的值大于或者等于限定容量大小时，表示已经满了
-     * @return
-     */
-    private boolean isFull() {
-        return capacity <= CACHE.size();
-    }
-
-    @Override
-    public boolean remove(String key) {
-        Value value = CACHE.remove(key);
-        if (value == null) {
-            return false;
-        }
-        long expired = value.expired;
-        if (expired > 0) {
-            EXPIRED.remove(expired);
-        }
-        return true;
-    }
-
-    class Value {
-        long expired; // 过期时间,纳秒
-        Object value;
-
-        Value(long expired, Object value) {
-            this.expired = expired;
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return JSON.toJSONString(this);
-        }
-    }
-
 }
