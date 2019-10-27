@@ -13,6 +13,14 @@ public class Node<E> {
 
     Node<E> next;
 
+    public Node() {
+    }
+
+    public Node(Node node) {
+        this.item = (E) node.getItem();
+        this.next = node.getNext();
+    }
+
     public Node(E item) {
         this.item = item;
     }
